@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJRSBFWJFF"></script>
+
+    <script>
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KJRSBFWJFF');
+
+    </script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>修道真言・誠心抽卡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="修道真言・誠心抽卡" />
+    <meta property="og:description" content="遇事徬徨？向南斗六司延壽星君誠心發問，獲取當下的啟示。" />
+    <meta property="og:url" content="https://fanghumt-card.vercel.app/" />
+    <meta property="og:image" content="https://fanghumt-card.vercel.app/img/og-image.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="修道真言・誠心抽卡" />
+    <meta name="twitter:description" content="遇事徬徨？向南斗六司延壽星君誠心發問，獲取當下的啟示。" />
+    <meta name="twitter:image" content="https://fanghumt-card.vercel.app/img/og-image.jpg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <video id="bg-video" autoplay loop muted playsinline poster="img/moin-bg.jpg">
+        <source src="img/moin-bg.mp4" type="video/mp4">
+    </video>
+      <section
+        class="screen screen--hero screen--locked active"
+        data-screen="screen-01"
+        style="--screen-image: url('img/main-bg.jpg');"
+      >
+        <picture class="hero-title">
+          <source
+            srcset="img/Home-title-mobile.png"
+            media="(max-width: 640px)"
+          />
+          <img
+            src="img/Home-title.png"
+            alt="修道真言"
+            width="1100"
+            height="300"
+            draggable="false"
+            oncontextmenu="return false"
+          />
+        </picture>
+      </section>
+
+      <section class="screen screen--bg screen--locked" data-screen="screen-02">
+        <div class="panel">
+          <p class="eyebrow">那座空島的場外應援</p>
+          <h2>《遇事不決，修道真言》</h2>
+          <p>
+            遇事徬徨，可至A某的神桌向南斗六司延壽星君禀告，誦讀南斗寶誥後誠心發問，
+            抽到的第一首短經句，即是提醒。
+          </p>
+          <button class="cta" data-go="screen-03">誠心祈求・星君慈悲</button>
+        </div>
+      </section>
+
+      <section class="screen screen--bg screen--locked" data-screen="screen-03">
+        <div class="panel panel--split panel--split-wide">
+          <div class="panel-figure">
+            <img src="img/南斗星君.jpg" alt="修道祈求" draggable="false" oncontextmenu="return false" />
+          </div>
+          <div class="panel-text">
+            <h2>《南斗寶誥》</h2>
+            <p>
+              斗臨箕尾，旋六曜以經天；<br>
+              位正丑宮，總七星而御世。
+            </p>
+            <p>
+              同陽德輝華於兩極，運陰精覆育於群倫，<br>
+              巍巍赤帝以分形，赫赫丹靈而變體。
+            </p>
+            <p>
+              陶鎔品彙，當萬物相應於離宮；<br>
+              鼓鑄生成，保億劫無窮之天運。
+            </p>
+            <p>
+              大悲大願、大聖大慈，南斗六司延壽星君。
+            </p>
+            <button class="cta" data-go="screen-04">心誠則靈</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen screen--bg" data-screen="screen-04">
+        <div class="panel">
+          <h2>心念專一</h2>
+          <p>
+            緩緩閉上眼睛，專注呼吸，進行三個完整的深呼吸。
+            當心靜後，點擊下方按鈕進入抽卡。
+          </p>
+          <button class="cta" data-go="screen-05">前往抽卡</button>
+        </div>
+      </section>
+
+      <section class="screen screen--bg screen--deck" data-screen="screen-05">
+        <div class="deck-stage">
+          <p class="deck-hint">點擊螢幕抽牌</p>
+          <div class="card-stack" data-deck aria-label="抽卡牌堆" role="button" tabindex="0"></div>
+          <div class="drawing-card" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="screen screen--bg" data-screen="screen-06">
+        <div class="panel panel--split">
+          <div class="panel-figure">
+            <img
+              class="result-card"
+              data-result-card
+              src="img/card/cardFront-1.png"
+              alt="抽到的修道真言卡牌"
+              draggable="false"
+            />
+          </div>
+          <div class="panel-text">
+            <p class="eyebrow">遇事不決．修道真言</p>
+            <h2>南斗六司延壽星君的啟示</h2>
+            <blockquote data-result-quote>
+              請細讀文字，感受當下的啟示。
+            </blockquote>
+            <div class="actions">
+              <button class="ghost" data-go="screen-03">返回神桌</button>
+              <button class="cta" data-save>儲存圖片</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="draw-overlay" aria-hidden="true">
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-face flip-card-face--back">
+              <img src="img/card/cardBack.png" alt="修道真言卡背" draggable="false" oncontextmenu="return false" />
+            </div>
+            <div class="flip-card-face flip-card-face--front">
+              <img data-flip-front src="img/card/cardFront-1.png" alt="抽出的修道真言卡面" draggable="false" oncontextmenu="return false" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="copyright">
+        Copyright &copy; 2025 A某. All rights reserved.<br>
+        <span>本網站使用 Google Analytics 進行匿名的流量統計以優化體驗，不收集任何個人識別資料。</span>
+      </footer>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,1321 @@
+:root {
+  color-scheme: light;
+  font-family: "Noto Serif TC", "PingFang TC", "Microsoft JhengHei", serif;
+  --bg: #0f3c53;
+  --panel: rgba(255, 255, 255, 0.82);
+  --panel-dark: rgba(7, 39, 56, 0.86);
+  --text: #163443;
+  --accent: #0c8172;
+  --accent-dark: #0a685c;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body {
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+button {
+   cursor: pointer;
+}
+
+img[data-result-card] {
+  user-select: auto;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+}
+
+.screen--locked {
+  pointer-events: none;
+}
+
+.screen--locked button,
+.screen--locked [data-go],
+.screen--locked [role="button"],
+.screen--locked .cta,
+.screen--locked .ghost {
+  pointer-events: auto;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 2.75rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.is-button-locked {
+  display: none;
+}
+
+/* --- 背景影片專用設定 Start --- */
+
+#bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  z-index: 0;
+  transform: scale(1.06);    
+  transform-origin: center;
+}
+
+/* 2. 修正 .stage：移除原本的靜態背景圖 */
+.stage {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background-image: none;
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 20%,
+    rgba(255, 255, 255, 0.3),
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 1; /* 確保光暈遮罩蓋在影片上 */
+}
+
+/* --- 背景影片專用設定 End --- */
+
+/* 4. 讓所有 Screen 頁面背景變透明，這樣才能看到底下的影片 */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 3rem);
+  
+  opacity: 0;
+  visibility: hidden; 
+  transition: opacity 0.85s ease, visibility 0s 0.85s; 
+  pointer-events: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-image: none !important;
+  background-color: transparent;
+  z-index: 2;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+
+  visibility: visible; /* 新增：設為可見 */
+  transition: opacity 0.55s ease, visibility 0s 0s; /* 修改：立即顯示，不需要延遲 */
+
+}
+
+.screen--bg {
+  background-image: none !important; /* 強制移除個別頁面的背景圖 */
+  background-color: transparent;     /* 背景透明 */
+}
+
+.screen--hero {
+  background-image: none !important; /* 強制移除個別頁面的背景圖 */
+  background-color: transparent;     /* 背景透明 */
+}
+
+.screen--hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  pointer-events: none;
+}
+
+.screen--hero img {
+  position: relative;
+  z-index: 1;
+}
+
+.panel {
+  max-width: 880px;
+  background: var(--panel);
+  padding: clamp(1.5rem, 2vw, 2.5rem);
+  border-radius: 32px;
+  box-shadow: 0 25px 65px rgba(15, 60, 83, 0.35);
+  box-sizing: border-box;
+}
+
+.panel--split {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) minmax(400px, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+  transform-origin: center center;
+  transition: transform 0.3s ease;
+}
+
+.panel--split-wide {
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.panel--tall {
+  max-width: 640px;
+  width: 100%;
+  margin-inline: auto;
+  transform-origin: center center;
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel--wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+}
+
+.panel h1,
+.panel h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  color: #04192a;
+  font-size: 24px;
+}
+
+.panel p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.panel blockquote {
+  margin: 1.5rem 0 2.5rem;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
+  border-left: 4px solid var(--accent);
+  background: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+.panel-figure img {
+  width: 100%;
+  border-radius: 28px;
+  box-shadow: 0 20px 45px rgba(5, 28, 41, 0.35);
+  object-fit: cover;
+}
+
+.panel-figure .result-card {
+  object-fit: contain;
+}
+
+.panel-text {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 400px;
+  flex: 1;
+}
+
+.panel-text .actions {
+  margin-top: auto;
+  padding-top: 1rem;
+  justify-content: flex-start;
+}
+
+.panel-text .cta {
+  align-self: flex-start;
+}
+
+.eyebrow {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  color: #376371;
+}
+
+.align-right {
+  text-align: right;
+  font-weight: 600;
+}
+
+.cta {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  box-shadow: 0 10px 25px rgba(12, 129, 114, 0.35);
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(12, 129, 114, 0.45);
+  background: linear-gradient(120deg, var(--accent), var(--accent-dark));
+}
+
+.ghost {
+  background: transparent;
+  color: var(--accent-dark);
+  border: 1px solid rgba(12, 129, 114, 0.6);
+}
+
+.ghost:hover {
+  transform: translateY(-2px);
+  background: rgba(12, 129, 114, 0.08);
+}
+
+.hero-title {
+  width: min(90vw, 960px);
+  opacity: 0;
+  transform: translateY(80px);
+  animation: hero-rise 1.8s ease forwards 0.4s;
+  filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.35));
+  margin: 0;
+  display: block;
+}
+
+.hero-title img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.screen--deck {
+  padding: clamp(1.5rem, 4vw, 4rem);
+}
+
+.deck-stage {
+  width: min(55vw, 520px);
+  margin-inline: auto;
+  perspective: 1200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.deck-hint {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0.1em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: hint-pulse 2s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+.drawing-card {
+  position: absolute;
+  width: clamp(180px, 28vw, 320px);
+  aspect-ratio: 3 / 5;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 100;
+  top: calc(50% + 1.5rem);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity; /* 優化動畫性能 */
+}
+
+.drawing-card.active {
+  opacity: 1;
+  animation: draw-card 1.5s ease-out forwards;
+}
+
+@keyframes draw-card {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(-50%, -50%) translateY(-80px) scale(1.1) rotate(-5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-200px) scale(1.15) rotate(-10deg);
+    opacity: 1;
+  }
+}
+
+.drawing-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 28px;
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.6);
+}
+
+.card-stack {
+  --spread: 3px;
+  --tilt: 0.35deg;
+  position: relative;
+  width: clamp(180px, 28vw, 320px);
+  aspect-ratio: 3 / 5;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.card-stack img {
+  --translate-x: calc(var(--offset) * var(--spread));
+  --rotate-z: calc(var(--offset) * var(--tilt));
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  object-fit: cover;
+  box-shadow: 0 15px 35px rgba(4, 25, 42, 0.45);
+  transform: translateX(var(--translate-x)) rotate(var(--rotate-z));
+  transition: transform 0.45s ease, filter 0.45s ease;
+  filter: saturate(0.9);
+  z-index: var(--order);
+  transform-origin: center bottom;
+}
+
+.card-stack:hover {
+  --spread: 7px;
+  --tilt: 0.7deg;
+}
+
+.card-stack img.is-hovered {
+  transform: translateX(var(--translate-x)) translateY(-18px)
+    rotate(var(--rotate-z)) rotateX(8deg) scale(1.015);
+  filter: saturate(1.15) brightness(1.05);
+  z-index: calc(var(--order) + 10);
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: #35515f;
+}
+
+.result-card {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 32px;
+  box-shadow: 0 25px 55px rgba(4, 25, 42, 0.45);
+  display: block;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.draw-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 12, 18, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 200; /* 確保在 drawing-card 之上 */
+  will-change: opacity; /* 優化動畫性能 */
+}
+
+.draw-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.draw-overlay .flip-card {
+  width: min(75vw, 360px);
+  aspect-ratio: 3 / 5;
+  perspective: 1600px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.9s ease;
+  transform-origin: center center;
+}
+
+.draw-overlay:not(.flipping):not(.zooming-out) .flip-card-inner {
+  transition: none;
+}
+
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.55);
+}
+
+.flip-card-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.flip-card-face--front {
+  transform: rotateY(180deg);
+}
+
+.draw-overlay.flipping .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.draw-overlay.zooming-out .flip-card-inner {
+  transform: rotateY(180deg);
+  animation: zoom-out-fade 1s ease-out forwards;
+  transition: none;
+}
+
+.draw-overlay.zooming-out .flip-card-face--back {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.draw-overlay.zooming-out .flip-card-face--front {
+  opacity: 1;
+}
+
+.draw-overlay.zooming-out {
+  animation: overlay-fade-out 1s ease-out forwards;
+}
+
+@keyframes zoom-out-fade {
+  0% {
+    transform: rotateY(180deg) scale(1) translateZ(0);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(180deg) scale(2.5) translateZ(-800px);
+    opacity: 0;
+  }
+}
+
+@keyframes overlay-fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 769px) {
+  @keyframes hero-rise {
+    0% {
+      opacity: 0;
+      transform: translateY(80px) scale(0.6);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-6px) scale(0.6);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(0.6);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+
+  .screen {
+
+    overflow-y: auto; /* 確保長頁面可以捲動 */
+
+    overflow-x: hidden;
+
+    align-items: flex-start; /* 讓內容從頂部開始排列，防止被切掉 */
+
+    padding: 1.5rem 1rem; /* 增加上下緩衝，避免卡得太死 */
+
+  }
+
+  .screen.active {
+
+    align-items: flex-start;
+
+  }
+
+  .screen--hero {
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 100vh; /* 首頁保持全螢幕 */
+
+  }
+
+  .screen--hero.active {
+
+    align-items: center;
+
+    justify-content: center;
+
+  }
+
+  .screen--bg[data-screen="screen-02"],
+
+  .screen--bg[data-screen="screen-04"] {
+
+    align-items: center; /* 置中顯示 */
+
+    justify-content: center;
+
+    height: 100vh;
+
+  }
+
+  .screen--bg[data-screen="screen-02"].active,
+
+  .screen--bg[data-screen="screen-04"].active {
+
+    align-items: center;
+
+    justify-content: center;
+
+  }
+
+  .screen--bg[data-screen="screen-03"],
+
+  .screen--bg[data-screen="screen-06"] {
+
+    align-items: flex-start; /* 確保內容長度超過螢幕時可以往下捲 */
+
+    justify-content: center;
+
+    height: auto;
+
+    min-height: 100vh;
+
+  }
+
+  .screen--bg[data-screen="screen-03"].active,
+
+  .screen--bg[data-screen="screen-06"].active {
+
+    align-items: flex-start;
+
+    justify-content: center;
+
+  }
+
+  .screen--deck {
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 100vh;
+
+  }
+
+  .screen--deck.active {
+
+    align-items: center;
+
+    justify-content: center;
+
+  }
+
+  .panel {
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    margin: 0 auto; /* 讓卡片置中 */
+
+    max-width: 100%;
+
+  }
+
+  .panel--split {
+
+    grid-template-columns: 1fr;
+
+    gap: 0; /* 移除間距，改用內部的 padding 控制，避免破版 */
+
+    display: flex;
+
+    flex-direction: column;
+
+  }
+
+  /* --- 關鍵修正區塊 Start --- */
+
+  .screen[data-screen="screen-03"] .panel,
+
+  .screen[data-screen="screen-06"] .panel {
+
+    max-width: 420px;
+
+    width: 100%; /* 寬度佔滿容器（容器已有 padding） */
+
+    margin: 0 auto;
+
+    padding: 0;
+
+    border-radius: 28px;
+
+    box-shadow: 0 25px 55px rgba(4, 25, 42, 0.25);
+
+    background: rgba(255, 255, 255, 0.92); /* 調整為與一般 panel 相同的透明值 */
+
+    
+
+    /* 修正：移除高度限制，讓白色背景隨內容長高 */
+
+    height: auto; 
+
+    max-height: none; 
+
+    overflow: visible;
+
+    
+
+    display: flex;
+
+    flex-direction: column;
+
+  }
+
+  /* --- 關鍵修正區塊 End --- */
+
+  .screen[data-screen="screen-03"] .panel .panel-figure,
+
+  .screen[data-screen="screen-06"] .panel .panel-figure {
+
+    padding: 1rem 1rem 0 1rem; /* 圖片周圍留白，增加下方間距 */
+
+    flex-shrink: 0; /* 防止圖片被擠壓 */
+
+  }
+
+  .panel-figure {
+
+    order: 1;
+
+    width: 100%;
+
+  }
+
+  .screen[data-screen="screen-03"] .panel-figure img,
+
+  .screen[data-screen="screen-06"] .panel-figure img {
+
+    border-radius: 20px;
+
+    width: 100%;
+
+    display: block;
+
+  }
+
+  .panel-text {
+
+    order: 2;
+
+    min-width: 0;
+
+    padding: 0 1.5rem 2rem; /* 下方增加 padding 確保按鈕不會貼底 */
+
+    width: 100%;
+
+    flex-shrink: 0; /* 防止文字區被擠壓 */
+
+  }
+
+  .screen[data-screen="screen-03"] .panel-text,
+
+  .screen[data-screen="screen-06"] .panel-text {
+
+    background: transparent;
+
+    border-radius: 0;
+
+    box-shadow: none;
+
+    padding-top: 1.5rem; /* 增加文字區域上方間距，與圖片區域分開 */
+
+  }
+
+  .panel-text .eyebrow {
+    margin-bottom: 0.15rem; /* 原本繼承全域設定約 1rem，這裡大幅縮小 */
+  }
+
+  /* 確保主標題上方沒有多餘邊距 (通常預設就是 0，加個保險) */
+  .panel-text h2 {
+    margin-top: 0;
+  }
+
+  .screen[data-screen="screen-03"] .panel-text .actions {
+
+    margin-top: 1.5rem;
+
+    justify-content: center;
+
+    gap: 0.75rem;
+
+    flex-wrap: wrap;
+
+    padding-bottom: 0;
+
+  }
+
+  .screen[data-screen="screen-06"] .panel-text .actions {
+
+    margin-top: 1rem; /* 減少間距，讓按鈕往上移 */
+
+    justify-content: center;
+
+    gap: 0.75rem;
+
+    flex-wrap: wrap;
+
+    padding-bottom: 0;
+
+  }
+
+  .panel--wide {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  button {
+
+    width: 100%;
+
+  }
+
+  .deck-stage {
+
+    transform: scale(0.7);
+
+    transform-origin: center center;
+
+  }
+
+  .deck-hint {
+
+    font-size: 24px;
+
+    order: 2;
+
+    margin-top: calc(1.5rem + 20px);
+
+  }
+
+  .card-stack {
+
+    order: 1;
+
+    width: min(60vw, 200px);
+
+  }
+
+  .card-stack:hover {
+
+    --spread: 3px;
+
+    --tilt: 0.35deg;
+
+  }
+
+  .card-stack img.is-hovered {
+
+    transform: translateX(var(--translate-x)) translateY(0) rotate(var(--rotate-z));
+
+    z-index: var(--order);
+
+  }
+
+  .drawing-card {
+
+    width: min(70vw, 240px);
+
+  }
+
+  .drawing-card.active {
+
+    animation: draw-card 2s ease-out forwards;
+
+  }
+
+  .hero-title {
+
+    width: 95px;
+
+    height: 474px;
+
+    margin: 0 auto;
+
+    display: block;
+
+  }
+
+  .hero-title img {
+
+    width: 100%;
+
+    height: auto;
+
+    object-fit: contain;
+
+  }
+
+  .panel--tall {
+
+    max-width: 100%;
+
+    padding: clamp(1rem, 4vw, 1.5rem);
+
+  }
+
+  .panel-figure .result-card {
+
+    width: 100%;
+
+    border-radius: 24px;
+
+  }
+
+  .panel-text .actions {
+
+    margin-top: 1rem;
+
+    padding-top: 0;
+
+    justify-content: flex-start;
+
+  }
+
+  .panel h2 {
+
+    font-size: clamp(20px, 5vw, 24px);
+
+    margin-bottom: 0.75rem;
+
+  }
+
+  .panel blockquote {
+
+    margin: 1rem 0 1.5rem;
+
+    padding: 0.75rem 1rem;
+
+    font-size: 0.9rem;
+
+  }
+
+  .actions {
+
+    gap: 0.5rem;
+
+  }
+
+  .actions button {
+
+    flex: 1;
+
+    min-width: 120px;
+
+  }
+
+}
+
+/* 針對超小螢幕的微調保持不變，或根據需要自動繼承上述設定 */
+
+@media (max-width: 480px) {
+
+  .panel--tall {
+
+    padding: 1rem;
+
+  }
+
+  .result-card {
+
+    width: 100%; /* 確保結果卡片寬度一致 */
+
+    border-radius: 20px;
+
+  }
+
+  .panel h2 {
+
+    font-size: 20px;
+
+  }
+
+  .panel blockquote {
+
+    font-size: 0.85rem;
+
+    padding: 0.625rem 0.875rem;
+
+  }
+
+  .eyebrow {
+
+    font-size: 0.8rem;
+
+  }
+
+}
+
+/* 針對 480px 以下超小螢幕的調整 */
+
+@media (max-width: 480px) {
+  .screen[data-screen="screen-06"] .panel-text .actions {
+    flex-direction: column; /* 垂直排列 */
+    gap: 0.5rem;            /* 按鈕間距 */
+    width: 100%;           /* 確保容器填滿 */
+  }
+
+  .screen[data-screen="screen-06"] .panel-text .actions button {
+
+    width: 100%;
+
+  }
+
+}
+
+/* 針對矮螢幕的高度調整 (可以保留，但建議讓 height: auto 生效) */
+
+@media (max-height: 800px) {
+
+  .panel--split {
+
+    transform: none; /* 取消縮放，因為現在改為可捲動模式 */
+
+    max-height: none;
+
+  }
+
+  .panel--tall {
+
+    transform: none;
+
+    max-height: none;
+
+  }
+
+}
+
+@media (max-height: 700px) {
+  .screen {
+    padding: 0.5rem;
+  }
+
+  .panel--split {
+    transform: scale(0.8);
+    max-height: calc(100vh - 1rem);
+  }
+
+  .panel--tall {
+    transform: scale(0.8);
+    max-height: calc(100vh - 1rem);
+  }
+
+  .panel h2 {
+    font-size: clamp(18px, 4vh, 24px);
+    margin-bottom: 0.5rem;
+  }
+
+  .panel blockquote {
+    margin: 0.75rem 0 1rem;
+    padding: clamp(0.5rem, 1.5vh, 0.75rem) clamp(0.75rem, 2vh, 1rem);
+    font-size: clamp(0.85rem, 2.5vh, 0.95rem);
+  }
+
+  .result-card {
+    width: min(240px, 70vw);
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-height: 600px) {
+  .screen {
+    padding: 0.375rem;
+  }
+
+  .panel--split {
+    transform: scale(0.7);
+    max-height: calc(100vh - 0.75rem);
+  }
+
+  .panel--tall {
+    transform: scale(0.7);
+    max-height: calc(100vh - 0.75rem);
+  }
+
+  .panel h2 {
+    font-size: clamp(16px, 3.5vh, 20px);
+    margin-bottom: 0.375rem;
+  }
+
+  .panel blockquote {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: clamp(0.75rem, 2vh, 0.85rem);
+  }
+
+  .result-card {
+    width: min(200px, 65vw);
+    margin-bottom: 0.375rem;
+  }
+
+  .actions {
+    gap: 0.375rem;
+    margin-top: 0.375rem;
+  }
+
+  .actions button {
+    padding: 0.45rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .screen {
+    padding: 0.25rem;
+  }
+
+  .panel--split {
+    transform: scale(0.6);
+    max-height: calc(100vh - 0.5rem);
+  }
+
+  .panel--tall {
+    transform: scale(0.6);
+    max-height: calc(100vh - 0.5rem);
+  }
+
+  .panel {
+    padding: clamp(0.5rem, 1.5vh, 1rem);
+  }
+
+  .panel h2 {
+    font-size: 18px;
+    margin-bottom: 0.25rem;
+  }
+
+  .panel blockquote {
+    margin: 0.375rem 0 0.5rem;
+    padding: 0.375rem 0.625rem;
+    font-size: 0.7rem;
+    line-height: 1.6;
+  }
+
+  .result-card {
+    width: min(180px, 60vw);
+    margin-bottom: 0.25rem;
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .actions {
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  .actions button {
+    padding: 0.375rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .hero-title {
+    transform: translateY(80px) scale(0.6);
+    transform-origin: center center;
+  }
+
+  .hero-title.active,
+  .hero-title[style*="opacity: 1"] {
+    transform: translateY(0) scale(0.6);
+  }
+
+  .deck-hint {
+    display: none;
+  }
+
+  .card-stack:hover {
+    --spread: 7px;
+    --tilt: 0.7deg;
+  }
+
+  .card-stack img.is-hovered {
+    transform: translateX(var(--translate-x)) translateY(-18px)
+      rotate(var(--rotate-z)) rotateX(8deg) scale(1.015);
+    filter: saturate(1.15) brightness(1.05);
+    z-index: calc(var(--order) + 10);
+  }
+
+  /* 大尺寸抽牌動畫調整：1秒快速流暢 */
+  .drawing-card.active {
+    animation: draw-card-desktop 1s ease-out forwards;
+  }
+
+  @keyframes draw-card-desktop {
+    0% {
+      transform: translate(-50%, -50%) translateY(0) scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    20% {
+      transform: translate(-50%, -50%) translateY(-60px) scale(1.05) rotate(-3deg);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(-50%, -50%) translateY(-120px) scale(1.1) rotate(-5deg);
+      opacity: 1;
+    }
+    80% {
+      transform: translate(-50%, -50%) translateY(-180px) scale(1.15) rotate(-8deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) translateY(-250px) scale(1.2) rotate(-10deg);
+      opacity: 1; /* 保持可見，由 JavaScript 控制移除 */
+    }
+  }
+}
+
+.copyright {
+  position: absolute;
+  bottom: 0.5rem;   
+  left: 0;
+  width: 100%;
+  text-align: center;
+    font-family: "Noto Serif TC", serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #163443; 
+  z-index: 10; 
+  pointer-events: none; 
+}
+
+/* --- 新增以下 CSS --- */
+
+/* 設定宣告文字：極淡、稍微縮小、融合背景 */
+.copyright span {
+  display: inline-block;     /* 必須設為區塊才能縮放 */
+  font-size: 12px;           /* 保持機器可讀的正常字體大小 */
+  transform: scale(0.7);     /* 視覺上縮小至 70% */
+  opacity: 0.2;              /* 透明度 20%，非常不明顯 */
+  margin-top: 2px;
+  mix-blend-mode: multiply;  /* 讓文字色彩融入背景，看起來像浮水印 */
+  transition: opacity 0.3s ease; /* 增加漸變動畫 */
+}
+
+/* 當滑鼠移到版權宣告上時，讓文字變清楚 */
+.copyright:hover span {
+  opacity: 0.8;              /* 恢復到 80% 可見度 */
+}
+
+/* ------------------ */
+
+@media (max-width: 768px) {
+  .copyright {
+    display: none;
+  }
+}
+
+@media (max-height: 600px) {
+  .copyright {
+    display: none;
+  }
+}
+
