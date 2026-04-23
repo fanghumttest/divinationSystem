@@ -514,7 +514,7 @@ export default function DivinationPage() {
                     </p>
                     <p style={{ margin: "0 0 10px", lineHeight: 1.9, fontSize: isMobile ? 13 : 18 }}>
                       同陽德輝華於兩極，運陰精覆育於群倫，<br />
-                      魏競赤帝以分形，赫赫丹靈而變體。
+                      巍巍赤帝以分形，赫赫丹靈而變體。
                     </p>
                     <p style={{ margin: "0 0 10px", lineHeight: 1.9, fontSize: isMobile ? 13 : 18 }}>
                       陶鎔品彙，當萬物相應於離宮；<br />
