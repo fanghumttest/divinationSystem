@@ -209,6 +209,18 @@ function SceneLoadReporter({
     }
   }, [active, progress]);
 
+  // 保底：若 progress 到 100 後 2 秒 active 仍未清除（部分瀏覽器／SW 啟動後偶發），強制通知 ready
+  React.useEffect(() => {
+    if (readyNotifiedRef.current || progress < 100) return;
+    const t = window.setTimeout(() => {
+      if (!readyNotifiedRef.current) {
+        readyNotifiedRef.current = true;
+        onReadyRef.current?.();
+      }
+    }, 2000);
+    return () => window.clearTimeout(t);
+  }, [progress]);
+
   return null;
 }
 
