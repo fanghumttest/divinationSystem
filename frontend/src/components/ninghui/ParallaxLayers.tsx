@@ -81,6 +81,23 @@ const TUBE_HOTSPOT_ROW_Y_NARROW = 10;
 /** 第五層籤筒本地縮放（原 1.4×1.5；略縮以利窄視窗構圖，須與進場動畫 target 一致） */
 const FIFTH_LAYER_TUBE_SCALE = 1.4 * 1.5 * 0.97;
 
+function trackGaEvent(eventName: string, params: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+  const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+  if (typeof gtag !== "function") return;
+  gtag("event", eventName, params);
+}
+
+function createFlowId() {
+  return `flow_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function mapJiaoResult(result: "聖杯" | "笑杯" | "陰杯") {
+  if (result === "聖杯") return "sheng";
+  if (result === "笑杯") return "xiao";
+  return "yin";
+}
+
 const ParallaxLayers = ({
   mouseRef,
   rawPointerRef,
@@ -164,6 +181,11 @@ const ParallaxLayers = ({
 
   // 求籤流程：throw_only = 只擲筊；fortune = 求籤（擲筊→聖杯→點籤筒→抽籤）
   const [flowMode, setFlowMode] = React.useState<"idle" | "throw_only" | "fortune">("idle");
+  const fortuneFlowIdRef = useRef<string | null>(null);
+  const fortuneStartedAtMsRef = useRef<number | null>(null);
+  const fortuneThrowCountRef = useRef(0);
+  const firstRoundThrowCountRef = useRef(0);
+  const completionTrackedFlowIdRef = useRef<string | null>(null);
   // 求籤流程中是否已得過聖杯（不侷限次數，有過就可點籤筒）
   const [shengBeiInFortuneFlow, setShengBeiInFortuneFlow] = React.useState(false);
   // 抽籤階段：idle / closeup（籤筒已拉到面前）/ picked（已抽出一支）
@@ -512,6 +534,20 @@ const ParallaxLayers = ({
 
   // 求籤：彈出筊（不讓使用者選哪一對），直接進入擲筊
   const handleClickQiuqian = React.useCallback(() => {
+    const flowId = createFlowId();
+    fortuneFlowIdRef.current = flowId;
+    fortuneStartedAtMsRef.current = Date.now();
+    fortuneThrowCountRef.current = 0;
+    firstRoundThrowCountRef.current = 0;
+    completionTrackedFlowIdRef.current = null;
+    trackGaEvent("ritual_select", {
+      ritual_type: "qiqian",
+      flow_id: flowId,
+    });
+    trackGaEvent("divination_start", {
+      ritual_type: "qiqian",
+      flow_id: flowId,
+    });
     setIsFifthLayer(false);
     setIsSixthLayer(false); // 確保再次求籤時 closeup 動畫可正常執行
     rejectedStickIdsRef.current.clear();
@@ -532,6 +568,20 @@ const ParallaxLayers = ({
 
   // 第六層「再問一題」：返回第一層且進入第一次擲筊狀態（等同剛點過求籤）
   const handleAskAgain = React.useCallback(() => {
+    const flowId = createFlowId();
+    fortuneFlowIdRef.current = flowId;
+    fortuneStartedAtMsRef.current = Date.now();
+    fortuneThrowCountRef.current = 0;
+    firstRoundThrowCountRef.current = 0;
+    completionTrackedFlowIdRef.current = null;
+    trackGaEvent("ritual_select", {
+      ritual_type: "qiqian",
+      flow_id: flowId,
+    });
+    trackGaEvent("divination_start", {
+      ritual_type: "qiqian",
+      flow_id: flowId,
+    });
     setConfirmStickId(null);
     setConfirmPoemId(null);
     setPoemType(null);
@@ -561,6 +611,11 @@ const ParallaxLayers = ({
   }, [onPickedStickChange, onJiaoActiveChange, resetJiaoAimBaseline]);
 
   const handleEndFortune = React.useCallback(() => {
+    fortuneFlowIdRef.current = null;
+    fortuneStartedAtMsRef.current = null;
+    fortuneThrowCountRef.current = 0;
+    firstRoundThrowCountRef.current = 0;
+    completionTrackedFlowIdRef.current = null;
     setConfirmStickId(null);
     setConfirmPoemId(null);
     setPoemType(null);
@@ -605,6 +660,9 @@ const ParallaxLayers = ({
   }, [onJiaoActiveChange, resetJiaoAimBaseline]);
 
   const handleClickThrowBlocks = React.useCallback(() => {
+    trackGaEvent("ritual_select", {
+      ritual_type: "jiaobei",
+    });
     setIsFifthLayer(false);
     setFlowMode("throw_only");
     setJiaoPhase((prev) => (prev === "flying" ? prev : "aiming"));
@@ -803,6 +861,37 @@ const ParallaxLayers = ({
     isSixthLayer,
     onFourthLayerPoemDisplayChange,
   ]);
+
+  React.useEffect(() => {
+    if (!isSixthLayer || confirmPoemId == null || !poemType) return;
+    const flowId = fortuneFlowIdRef.current;
+    if (!flowId || completionTrackedFlowIdRef.current === flowId) return;
+
+    const startedAt = fortuneStartedAtMsRef.current;
+    const durationSec =
+      typeof startedAt === "number" ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : undefined;
+    const deckType = poemType === "rensheng" ? "sisheng" : "xiudao";
+    const cardName = `${deckType === "sisheng" ? "四聖真君靈籤" : "修道真言"}-${confirmPoemId}`;
+
+    trackGaEvent("card_drawn", {
+      ritual_type: "qiqian",
+      flow_id: flowId,
+      deck_type: deckType,
+      card_id: confirmPoemId,
+      card_name: cardName,
+    });
+
+    trackGaEvent("divination_complete", {
+      ritual_type: "qiqian",
+      flow_id: flowId,
+      deck_type: deckType,
+      card_id: confirmPoemId,
+      duration_sec: durationSec,
+      total_throws: fortuneThrowCountRef.current,
+    });
+
+    completionTrackedFlowIdRef.current = flowId;
+  }, [isSixthLayer, confirmPoemId, poemType]);
 
   const handleDownloadCard = React.useCallback(async () => {
     if (confirmPoemId == null || !poemType) return;
@@ -1448,6 +1537,30 @@ const ParallaxLayers = ({
           setJiaoPhase("result");
 
           const isSecondRound = confirmStickId !== null && secondJiaoStarted;
+          const resultKey = mapJiaoResult(result);
+          if (flowMode === "fortune") {
+            const flowId = fortuneFlowIdRef.current;
+            fortuneThrowCountRef.current += 1;
+            if (!isSecondRound) {
+              firstRoundThrowCountRef.current += 1;
+            }
+            trackGaEvent("jiaobei_throw", {
+              ritual_type: "qiqian",
+              flow_id: flowId,
+              stage: isSecondRound ? "second_round" : "first_round",
+              round_no: fortuneThrowCountRef.current,
+              first_round_no: isSecondRound ? null : firstRoundThrowCountRef.current,
+              result: resultKey,
+              result_zh: result,
+            });
+          } else if (flowMode === "throw_only") {
+            trackGaEvent("jiaobei_throw", {
+              ritual_type: "jiaobei",
+              stage: "standalone",
+              result: resultKey,
+              result_zh: result,
+            });
+          }
 
           // 第一輪求籤：尚未有候選籤時，聖杯代表可進入抽籤流程
           if (result === "聖杯" && confirmStickId === null && flowMode === "fortune") {
