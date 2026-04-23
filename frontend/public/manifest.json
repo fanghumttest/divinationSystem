@@ -1,0 +1,20 @@
+{
+  "name": "方壺解疑",
+  "short_name": "方壺解疑",
+  "description": "遇事徬徨，可向方壺主神南斗六司延壽星君禀告，誦讀南斗寶誥後誠心發問，求取詩籤。",
+  "start_url": "/divination",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1a1410",
+  "theme_color": "#1a1410",
+  "orientation": "portrait-primary",
+  "lang": "zh-TW",
+  "icons": [
+    {
+      "src": "/intro/deity.jpg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

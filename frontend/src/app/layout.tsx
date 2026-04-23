@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Serif_TC } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 const notoSerifTC = Noto_Serif_TC({
   weight: ["400", "500", "600", "700"],
@@ -13,7 +14,25 @@ const notoSerifTC = Noto_Serif_TC({
 
 export const metadata: Metadata = {
   title: "遇事不決，方壺解疑",
-  description: "Ninghui divination flow standalone frontend",
+  description: "遇事徬徨，可向方壺主神南斗六司延壽星君禀告，誦讀南斗寶誥後誠心發問，求取詩籤。",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "方壺解疑",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    apple: "/intro/deity.jpg",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1a1410",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -30,6 +49,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GoogleAnalytics measurementId={gaMeasurementId} />
         </Suspense>
+        <ServiceWorkerRegister />
         {children}
         <div
           className="hidden lg:block"
