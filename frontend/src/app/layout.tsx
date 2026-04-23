@@ -22,12 +22,12 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   icons: {
-    apple: "/intro/deity.jpg",
+    apple: "/icons/Logo.png",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a1410",
+  themeColor: "#000000",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

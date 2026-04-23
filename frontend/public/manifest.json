@@ -5,16 +5,16 @@
   "start_url": "/divination",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#1a1410",
-  "theme_color": "#1a1410",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "portrait-primary",
   "lang": "zh-TW",
   "icons": [
     {
-      "src": "/intro/deity.jpg",
+      "src": "/icons/Logo.png",
       "sizes": "any",
-      "type": "image/jpeg",
-      "purpose": "any"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
