@@ -259,13 +259,13 @@ export default function DivinationPage() {
           transition: "transform 700ms ease-out, opacity 500ms ease",
           opacity: readyToEnter ? 1 : 0,
           pointerEvents: readyToEnter ? "auto" : "none",
-          // 手機 stage 4：有 DOM 神像時用漸層橋接；擲筊／第五／六層只留 3D 全視窗，改滿版不遮
+          // 手機 stage 4：有 DOM 神像時用漸層橋接；擲筊中仍保留遮罩；第五／六層才移除
           maskImage:
-            isMobile && stage === 4 && !isFifthLayer && !isSixthLayer && !isJiaoActive
+            isMobile && stage === 4 && !isFifthLayer && !isSixthLayer
               ? "linear-gradient(to bottom, transparent 0%, transparent 38%, black 50%)"
               : undefined,
           WebkitMaskImage:
-            isMobile && stage === 4 && !isFifthLayer && !isSixthLayer && !isJiaoActive
+            isMobile && stage === 4 && !isFifthLayer && !isSixthLayer
               ? "linear-gradient(to bottom, transparent 0%, transparent 38%, black 50%)"
               : undefined,
         }}
@@ -385,7 +385,7 @@ export default function DivinationPage() {
             transform: "translateX(-50%)",
             zIndex: 2000,
             pointerEvents: "none",
-            opacity: isSixthLayer || isFifthLayer || isJiaoActive ? 0 : 1,
+            opacity: isSixthLayer || isFifthLayer ? 0 : 1,
             transition: "opacity 0.5s ease",
           }}
         >
